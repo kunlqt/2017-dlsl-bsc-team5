@@ -1,0 +1,4 @@
+*.zip
+*.tar.gz
+glove.6B
+20news-bydate-*
