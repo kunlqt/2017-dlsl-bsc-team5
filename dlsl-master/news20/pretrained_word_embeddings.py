@@ -1,4 +1,4 @@
-
+# -*- coding: cp1252 -*-
 '''This script loads pre-trained word embeddings (GloVe embeddings)
 into a frozen Keras Embedding layer, and uses it to
 train a text classification model on the 20 Newsgroup dataset
@@ -41,11 +41,11 @@ number_of_Dense_layers=2
 """
 epoch_to_load=20
 
-#Eliminar des de declaracio embedding fins a fit
-with open(BASE_DIR + 'models/model'+ str(epoch_to_load) + '.json','r') as model_json:
+ #Eliminar des de declaració embedding fins a fit
+with open(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model'+ epoch_to_load + '.json','r') as model_json:
     model=model_from_json(model_json.read())
 
-model.load_weights(BASE_DIR + 'models/model_weights_' + str(epoch_to_load) + '_.h5')
+model.load_weights(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model_weights_' + epoch_to_load + '_.h5')
 
 """
 
@@ -162,6 +162,7 @@ for iteration in range(1, 21):
     tr_acc.extend(history.history['acc'])
     val_acc.extend(history.history['val_acc'])
     print
+
     preds = model.predict(X_val, verbose=0)
     #save(y_val, preds, 'rnn_{}.pred'.format(iteration))
     
