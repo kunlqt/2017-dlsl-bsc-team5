@@ -1,4 +1,4 @@
-
+# -*- coding: cp1252 -*-
 '''This script loads pre-trained word embeddings (GloVe embeddings)
 into a frozen Keras Embedding layer, and uses it to
 train a text classification model on the 20 Newsgroup dataset
@@ -42,10 +42,10 @@ number_of_Dense_layers=2
 epoch_to_load=20
 
  #Eliminar des de declaració embedding fins a fit
-with open(BASE_DIR + 'models/model'+ epoch_to_load + '.json','r') as model_json:
+with open(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model'+ epoch_to_load + '.json','r') as model_json:
     model=model_from_json(model_json.read())
 
-model.load_weights(BASE_DIR + 'models/model_weights_' + epoch_to_load + '_.h5')
+model.load_weights(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model_weights_' + epoch_to_load + '_.h5')
 '''
 
 
@@ -175,9 +175,9 @@ for iteration in range(1, 20):
     preds = model.predict_classes(X_val, verbose=0)
     save(y_val, preds, 'rnn_{}.pred'.format(iteration))
 
-    make_dir()
-    model.save_weights(BASE_DIR + 'models/model_weights_' + iteration + '_.h5')
-    with open(BASE_DIR + 'models/model'+ iteration + '.json','w') as model_json:
+    make_dir(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers )
+    model.save_weights(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model_weights_' + iteration + '_.h5')
+    with open(BASE_DIR + 'models/' + BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '/model'+ iteration + '.json','w') as model_json:
         model_json.write(model.to_json())
 
     for i in range(10):
