@@ -27,33 +27,33 @@ from keras.utils.visualize_util import plot
 import sys
 
 #Directoris, variables globals.
-BASE_DIR = '/home/marta/2017-dlsl-bsc-team5/dlsl-master/news20/'
-GLOVE_DIR = BASE_DIR + 'glove.6B/'
-TRAIN_TEXT_DATA_DIR = BASE_DIR + '20news-bydate/20news-bydate-train/'
-TEST_TEXT_DATA_DIR = BASE_DIR + '20news-bydate/20news-bydate-test/'
+BASE_DIR = '.'
+GLOVE_DIR = BASE_DIR + '/glove.6B/'
+TRAIN_TEXT_DATA_DIR = BASE_DIR + '/20news-bydate-train/'
+TEST_TEXT_DATA_DIR = BASE_DIR + '/20news-bydate-test/'
 MAX_SEQUENCE_LENGTH = 1000
-EMBEDDING_DIM = 100
+EMBEDDING_DIM = 50
 
 BATCH_SIZE=50
 OPTIMIZER='rmsprop'
 number_of_Dense_layers=2
 
-'''
+"""
 epoch_to_load=20
 
- #Eliminar des de declaració embedding fins a fit
-with open(BASE_DIR + 'models/model'+ epoch_to_load + '.json','r') as model_json:
+#Eliminar des de declaracio embedding fins a fit
+with open(BASE_DIR + 'models/model'+ str(epoch_to_load) + '.json','r') as model_json:
     model=model_from_json(model_json.read())
 
-model.load_weights(BASE_DIR + 'models/model_weights_' + epoch_to_load + '_.h5')
-'''
+model.load_weights(BASE_DIR + 'models/model_weights_' + str(epoch_to_load) + '_.h5')
 
+"""
 
 def read_glove_vectors(filename):
     embeddings_index = {}
     f = open(filename)
-    coefs = None
-    for i, line in enumerate(f):
+    coefs = None    
+    for i, line in enumerate(f): 
         values = line.split()
         word = values[0]
         if coefs is None:
@@ -76,9 +76,6 @@ def test_to_sequence(texts, index, max_sequence_length):
 print('Reading word vectors.')
 embedding_matrix, embeddings_index = read_glove_vectors(os.path.join(GLOVE_DIR, 'glove.6B.%dd.txt' % EMBEDDING_DIM))
 print('Found %s word vectors.' % len(embeddings_index))
-#print(embedding_matrix.shape)
-
-#exit()
 
 # second, prepare text samples and their labels
 print('Processing text dataset')
@@ -146,13 +143,6 @@ plot(model, show_shapes=True, to_file='news20.png', show_layer_names=False)
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=OPTIMIZER,
               metrics=['acc'])
-'''
-# happy learning!
-model.fit(X_train, y_train[..., np.newaxis],
-          validation_data=(X_val, y_val[..., np.newaxis]),
-          nb_epoch=20, batch_size=128)
-
-'''
 
 tr_loss = []
 val_loss=[]
@@ -161,7 +151,7 @@ val_acc=[]
 
 
 # Train the model each generation and show predictions against the validation dataset
-for iteration in range(1, 20):
+for iteration in range(1, 21):
     print()
     print('-' * 50)
     print('Iteration', iteration)
@@ -172,30 +162,21 @@ for iteration in range(1, 20):
     tr_acc.extend(history.history['acc'])
     val_acc.extend(history.history['val_acc'])
     print
-    preds = model.predict_classes(X_val, verbose=0)
-    save(y_val, preds, 'rnn_{}.pred'.format(iteration))
-
-    make_dir()
-    model.save_weights(BASE_DIR + 'models/model_weights_' + iteration + '_.h5')
-    with open(BASE_DIR + 'models/model'+ iteration + '.json','w') as model_json:
+    preds = model.predict(X_val, verbose=0)
+    #save(y_val, preds, 'rnn_{}.pred'.format(iteration))
+    
+    
+    model.save_weights(BASE_DIR + '/models/model_weights_' + str(iteration) + '_.h5')
+    with open(BASE_DIR + '/models/model'+ str(iteration) + '.json','w') as model_json:
         model_json.write(model.to_json())
 
-    for i in range(10):
-        ind = np.random.randint(0, len(X_val))
-        rowX, rowy = X_val[ind], y_val[ind]
-        pred = preds[ind]
-        q = ctable.decode(rowX)
-        correct = ptable.decode(rowy, ch=' ').strip()
-        guess = ptable.decode(pred, ch=' ').strip()
-        print('W:', q[::-1] if INVERT else q)
-        print('T:', correct)
-        print(colors.ok + '1' + colors.close if correct == guess else colors.fail + '0' + colors.close,
-              guess, '(' + str(levenshtein(correct.split(), guess.split())) + ')')
-        print('---')
 
 
 
-np.savetxt(BASE_DIR + 'Results/tr_losses_'+ BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '.txt', tr_loss)
-np.savetxt(BASE_DIR + 'Results/val_loss_'+ BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '.txt', val_loss)
-np.savetxt(BASE_DIR + 'Results/tr_acc_'+ BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '.txt',tr_acc)
-np.savetxt(BASE_DIR + 'Results/val_acc_'+ BATCH_SIZE + '_' + OPTIMIZER + '_' + number_of_Dense_layers + '.txt',val_acc)
+
+np.savetxt(BASE_DIR + '/results/tr_losses_'+ str(BATCH_SIZE) + '_' + OPTIMIZER + '_' + str(number_of_Dense_layers) + '.txt', tr_loss)
+np.savetxt(BASE_DIR + '/results/val_loss_'+ str(BATCH_SIZE) + '_' + OPTIMIZER + '_' + str(number_of_Dense_layers) + '.txt', val_loss)
+np.savetxt(BASE_DIR + '/results/tr_acc_'+ str(BATCH_SIZE) + '_' + OPTIMIZER + '_' + str(number_of_Dense_layers) + '.txt',tr_acc)
+np.savetxt(BASE_DIR + '/results/val_acc_'+ str(BATCH_SIZE) + '_' + OPTIMIZER + '_' + str(number_of_Dense_layers) + '.txt',val_acc)
+
+
