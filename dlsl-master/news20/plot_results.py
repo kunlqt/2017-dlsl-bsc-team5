@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-DIR = './Results'
+DIR = './results/embedding_300/reports'
 
 def lectura (filename):
     values = []
@@ -22,6 +22,7 @@ val_loss=[]
 for name in sorted(os.listdir(DIR)):
     #noms_fitxers.append(i)
     name=name.split('_', 4)
+    print(name)
     batches=name[2]
     if name[0]=='tr':
         if name[1]=='acc':
@@ -52,7 +53,7 @@ for i in range(len(tr_acc)):
 
     fig=plt.figure(i)
 
-    fig.suptitle('Number of batches: ' + name[2] + ' Optimizer: ' + name[3])
+    fig.suptitle('Batch Size: ' + name[2] + ' Optimizer: ' + name[3])
     ax1=fig.add_subplot(1,2,1)
     ax2=fig.add_subplot(1,2,2)
 
